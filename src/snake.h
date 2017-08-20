@@ -3,8 +3,8 @@
 
 #include <cpctelera.h>
 
-#define SNAKE_HEAD snake.nodes[snake.head]
-#define SNAKE_TAIL snake.nodes[snake.tail]
+#define SNAKE_HEAD(snake) (snake)->nodes[(snake)->head]
+#define SNAKE_TAIL(snake) (snake)->nodes[(snake)->tail]
 
 /* snake max length MUST be a power of two
  *
@@ -29,13 +29,11 @@ typedef struct {
     TSnakeNode nodes[MAX_SNAKE_LEN];
 } TSnake;
 
-extern TSnake snake;
-
-extern void snake_add_node(void);
-extern void snake_draw_body(void);
-extern void snake_draw_head(void);
-extern void snake_erase_tail(void);
-extern void snake_init(void);
-extern void snake_update(void);
+extern void snake_add_node(TSnake *snake);
+extern void snake_draw_body(TSnake *snake);
+extern void snake_draw_head(TSnake *snake);
+extern void snake_erase_tail(TSnake *snake);
+extern void snake_init(TSnake *snake);
+extern void snake_update(TSnake *snake);
 
 #endif /* _SNAKE_H_ */

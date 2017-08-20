@@ -49,6 +49,7 @@ typedef struct {
 
 const unsigned char palette[NUM_COLORS] = {0, 26, 25, 18, 15, 9, 6, 22, 3};
 
+TSnake snake;
 TFruit fruit;
 
 volatile u16 timer;
@@ -96,12 +97,12 @@ u8 snake_check_collision(void) {
      */
     u8 *ptr;
 
-    ptr = get_tile_center_ptr(SNAKE_HEAD.x, SNAKE_HEAD.y);
-    return ((*ptr != 0) && ((fruit.x != SNAKE_HEAD.x) || (fruit.y != SNAKE_HEAD.y)));
+    ptr = get_tile_center_ptr(SNAKE_HEAD(&snake).x, SNAKE_HEAD(&snake).y);
+    return ((*ptr != 0) && ((fruit.x != SNAKE_HEAD(&snake).x) || (fruit.y != SNAKE_HEAD(&snake).y)));
 }
 
 u8 snake_check_fruit(void) {
-    return (SNAKE_HEAD.x == fruit.x) && (SNAKE_HEAD.y == fruit.y);
+    return (SNAKE_HEAD(&snake).x == fruit.x) && (SNAKE_HEAD(&snake).y == fruit.y);
 }
 
 
@@ -181,7 +182,7 @@ void read_keyboard_debug(void) {
         debug_enabled = !debug_enabled;
     }
     if (cpct_isKeyPressed(Key_A)) {
-        snake_add_node();
+        snake_add_node(&snake);
     }
     if (cpct_isKeyPressed(Key_W)) {
         if (game_delay < 50) {
@@ -200,7 +201,7 @@ void show_debug() {
     u8 *ptr = cpct_getScreenPtr(CPCT_VMEM_START, 0, 0);
     sprintf(
         debug_info, "(%02x, %02x)  %02x %04x",
-        SNAKE_HEAD.x, SNAKE_HEAD.y, game_delay, fruit.ttl
+        SNAKE_HEAD(&snake).x, SNAKE_HEAD(&snake).y, game_delay, fruit.ttl
         );
     display_zstring(debug_info, ptr, 1, 0);
 }
@@ -224,7 +225,7 @@ void game(void) {
     cpct_setBorder(1);
     cpct_akp_musicInit(G_Menu);
 
-    snake_init();
+    snake_init(&snake);
     fruit_init();
     fruit_draw();
     while (1) {
@@ -243,15 +244,15 @@ void game(void) {
                 fruit_init();
                 fruit_draw();
             }
-            snake_draw_body();
-            snake_erase_tail();
-            snake_update();
+            snake_draw_body(&snake);
+            snake_erase_tail(&snake);
+            snake_update(&snake);
             if (snake_check_collision()) {
                 break;
             }
-            snake_draw_head();
+            snake_draw_head(&snake);
             if (snake_check_fruit()) {
-                snake_add_node();
+                snake_add_node(&snake);
                 fruit_init();
                 fruit_draw();
             }

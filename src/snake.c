@@ -3,36 +3,35 @@
 #include "snake.h"
 #include "sprites.h"
 
-TSnake snake;
 
 /*
  * Snake
  */
 
-void snake_init(void) {
-    snake.dx = -1;
-    snake.dy = 0;
-    snake.head = 0;
-    snake.tail = 0;
-    snake.size = 1;
-    snake.nodes[0].x = NUM_COLUMNS / 2;
-    snake.nodes[0].y = NUM_ROWS / 2 - 4;
+void snake_init(TSnake *snake) {
+    snake->dx = -1;
+    snake->dy = 0;
+    snake->head = 0;
+    snake->tail = 0;
+    snake->size = 1;
+    snake->nodes[0].x = NUM_COLUMNS / 2;
+    snake->nodes[0].y = NUM_ROWS / 2 - 4;
 }
 
-void snake_draw_head(void) {
+void snake_draw_head(TSnake *snake) {
     u8 *ptr;
     const char *sprite;
 
-    ptr = get_tile_ptr(SNAKE_HEAD.x, SNAKE_HEAD.y);
+    ptr = get_tile_ptr(SNAKE_HEAD(snake).x, SNAKE_HEAD(snake).y);
     /* cpct_drawSolidBox(ptr, 0xFF, TILE_WIDTH, TILE_HEIGHT); */
-    if (snake.dx) {
-        if (snake.dx == 1) {
+    if (snake->dx) {
+        if (snake->dx == 1) {
             sprite = SpriteSnakeHeadRight;
         } else {
             sprite = SpriteSnakeHeadLeft;
         }
     } else {
-        if (snake.dy == 1) {
+        if (snake->dy == 1) {
             sprite = SpriteSnakeHeadDown;
         } else {
             sprite = SpriteSnakeHeadUp;
@@ -41,12 +40,12 @@ void snake_draw_head(void) {
     cpct_drawSprite(sprite, ptr, TILE_WIDTH, TILE_HEIGHT);
 }
 
-void snake_draw_body(void) {
+void snake_draw_body(TSnake *snake) {
     u8 *ptr;
     const char *sprite;
 
-    ptr = get_tile_ptr(SNAKE_HEAD.x, SNAKE_HEAD.y);
-    if (snake.dx) {
+    ptr = get_tile_ptr(SNAKE_HEAD(snake).x, SNAKE_HEAD(snake).y);
+    if (snake->dx) {
         sprite = SpriteSnakeBodyHorz;
     } else {
         sprite = SpriteSnakeBodyVert;
@@ -54,30 +53,30 @@ void snake_draw_body(void) {
     cpct_drawSprite (sprite, ptr, TILE_WIDTH, TILE_HEIGHT);
 }
 
-void snake_erase_tail(void) {
+void snake_erase_tail(TSnake *snake) {
     u8 *ptr;
 
-    ptr = get_tile_ptr(SNAKE_TAIL.x, SNAKE_TAIL.y);
+    ptr = get_tile_ptr(SNAKE_TAIL(snake).x, SNAKE_TAIL(snake).y);
     cpct_drawSolidBox(ptr, 0, TILE_WIDTH, TILE_HEIGHT);
 
 }
 
 
-void snake_update(void) {
+void snake_update(TSnake *snake) {
     TSnakeNode head;
 
-    head.x = SNAKE_HEAD.x;
-    head.y = SNAKE_HEAD.y;
+    head.x = SNAKE_HEAD(snake).x;
+    head.y = SNAKE_HEAD(snake).y;
 
-    if (snake.dx) { // horizontal movement
-        head.x += snake.dx;
+    if (snake->dx) { // horizontal movement
+        head.x += snake->dx;
         if (head.x < 0) {
             head.x = NUM_COLUMNS - 1;
         } else if (head.x >= NUM_COLUMNS) {
             head.x = 0;
         }
     } else {
-        head.y += snake.dy;
+        head.y += snake->dy;
         if (head.y < 0) {
             head.y = NUM_ROWS - 1;
         } else if (head.y >= NUM_ROWS) {
@@ -86,16 +85,16 @@ void snake_update(void) {
     }
     // NOTE: if MAX_SNAKE_LEN != 256 an "if" is required to work around index
     // wrapping
-    snake.tail--;
-    snake.head--;
-    SNAKE_HEAD.x = head.x;
-    SNAKE_HEAD.y = head.y;
+    snake->tail--;
+    snake->head--;
+    SNAKE_HEAD(snake).x = head.x;
+    SNAKE_HEAD(snake).y = head.y;
 }
 
 
-void snake_add_node(void) {
-    if (snake.size < MAX_SNAKE_LEN - 1) {
-        snake.tail++;
-        snake.size++;
+void snake_add_node(TSnake *snake) {
+    if (snake->size < MAX_SNAKE_LEN - 1) {
+        snake->tail++;
+        snake->size++;
     }
 }
