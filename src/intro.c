@@ -85,11 +85,11 @@ static TSnakeSmall snakes[NUM_SNAKES];
  */
 
 static const TSnakeStartupInfo initial_position[NUM_SNAKES] = {
-    {0, 19, 12},  // S
-    {4, 19, 14},  // N
-    {9, 19, 13},  // A
-    {13, 19, 12}, // K
-    {19, 19, 13}  // E
+    {0, 18, 12},  // S
+    {4, 18, 14},  // N
+    {9, 18, 13},  // A
+    {13, 18, 12}, // K
+    {19, 18, 13}  // E
 };
 
 /*

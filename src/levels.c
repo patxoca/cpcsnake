@@ -22,7 +22,7 @@ static const u8* const tile_set[] = {
 
 static const u8 level_01[] = {
      9, 9, BRICK,
-    10, 9, SAND,
+    10, 9, BRICK,
     END
 };
 
