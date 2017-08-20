@@ -14,6 +14,18 @@ void snake_init(TSnake *snake) {
     snake->head = 0;
     snake->tail = 0;
     snake->size = 1;
+    snake->mask = BIG_SNAKE_MASK;
+    snake->nodes[0].x = NUM_COLUMNS / 2;
+    snake->nodes[0].y = NUM_ROWS / 2 - 4;
+}
+
+void snake_small_init(TSnakeSmall *snake) {
+    snake->dx = -1;
+    snake->dy = 0;
+    snake->head = 0;
+    snake->tail = 0;
+    snake->size = 1;
+    snake->mask = SMALL_SNAKE_MASK;
     snake->nodes[0].x = NUM_COLUMNS / 2;
     snake->nodes[0].y = NUM_ROWS / 2 - 4;
 }
@@ -83,18 +95,18 @@ void snake_update(TSnake *snake) {
             head.y = 0;
         }
     }
-    // NOTE: if MAX_SNAKE_LEN != 256 an "if" is required to work around index
-    // wrapping
-    snake->tail--;
-    snake->head--;
+    // NOTE: if the maximum length of the snake is not a power of two an "if"
+    // statement is required to work around index wrapping.
+    snake->tail = (snake->tail - 1) & snake->mask;
+    snake->head = (snake->head - 1) & snake->mask;
     SNAKE_HEAD(snake).x = head.x;
     SNAKE_HEAD(snake).y = head.y;
 }
 
 
 void snake_add_node(TSnake *snake) {
-    if (snake->size < MAX_SNAKE_LEN - 1) {
-        snake->tail++;
+    if (snake->size < snake->mask) {
+        snake->tail = (snake->tail + 1) & snake->mask;
         snake->size++;
     }
 }

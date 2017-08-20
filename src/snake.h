@@ -6,14 +6,14 @@
 #define SNAKE_HEAD(snake) (snake)->nodes[(snake)->head]
 #define SNAKE_TAIL(snake) (snake)->nodes[(snake)->tail]
 
-/* snake max length MUST be a power of two
- *
- * Having a circular queue 256 entries log has a nice property,
- * incrementing/decrementing the head and tail indexes past the queue limits
- * automatically wraps them, no "if (out_of_bounds) adjust_index" required.
-*/
+/* the implementation requires that the snake's max length MUST be a power of
+ * two.
+ */
 
-#define MAX_SNAKE_LEN 256
+#define BIG_SNAKE_SIZE 0xFF
+#define SMALL_SNAKE_SIZE 16
+#define BIG_SNAKE_MASK 255
+#define SMALL_SNAKE_MASK 0X0F
 
 typedef struct {
     i8 x;
@@ -26,8 +26,19 @@ typedef struct {
     u8 head;
     u8 tail;
     u8 size;
-    TSnakeNode nodes[MAX_SNAKE_LEN];
+    u8 mask;
+    TSnakeNode nodes[BIG_SNAKE_SIZE];
 } TSnake;
+
+typedef struct {
+    i8 dx;
+    i8 dy;
+    u8 head;
+    u8 tail;
+    u8 size;
+    u8 mask;
+    TSnakeNode nodes[SMALL_SNAKE_SIZE];
+} TSnakeSmall;
 
 extern void snake_add_node(TSnake *snake);
 extern void snake_draw_body(TSnake *snake);
