@@ -1,0 +1,6 @@
+*~
+csnake.cdt
+csnake.dsk
+obj/*
+tmp/*
+.vscode
