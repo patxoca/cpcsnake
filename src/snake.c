@@ -94,7 +94,9 @@ void snake_update(TSnake *snake) {
         } else if (x >= NUM_COLUMNS) {
             x = 0;
         }
-    } else {
+    }
+
+    if (snake->dy) {
         y += snake->dy;
         if (y < 0) {
             y = NUM_ROWS - 1;

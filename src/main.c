@@ -16,6 +16,7 @@
 #include <cpctelera.h>
 #include <stdio.h>
 #include "grid.h"
+#include "intro.h"
 #include "levels.h"
 #include "music.h"
 #include "snake.h"
@@ -218,9 +219,10 @@ void menu(void) {
     u8 *ptr;
 
     clear_screen();
-    ptr = get_pixel_ptr(0, 96);
+    intro();
+    ptr = get_pixel_ptr(0, 136);
     display_zstring("  Press any key to", ptr, 1, 0);
-    ptr = get_pixel_ptr(0, 106);
+    ptr = get_pixel_ptr(0, 146);
     display_zstring("  start a new game", ptr, 1, 0);
     do {
         cpct_scanKeyboard_f();
