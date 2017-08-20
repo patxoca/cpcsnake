@@ -10,9 +10,9 @@
  * two.
  */
 
-#define BIG_SNAKE_SIZE 0xFF
+#define BIG_SNAKE_SIZE 256
 #define SMALL_SNAKE_SIZE 16
-#define BIG_SNAKE_MASK 255
+#define BIG_SNAKE_MASK 0xFF
 #define SMALL_SNAKE_MASK 0X0F
 
 typedef struct {
