@@ -96,13 +96,18 @@ u8 snake_check_collision(void) {
      *
      */
     u8 *ptr;
+    TSnakeNode *head;
 
-    ptr = get_tile_center_ptr(SNAKE_HEAD(&snake).x, SNAKE_HEAD(&snake).y);
-    return ((*ptr != 0) && ((fruit.x != SNAKE_HEAD(&snake).x) || (fruit.y != SNAKE_HEAD(&snake).y)));
+    head = snake_get_head(&snake);
+    ptr = get_tile_center_ptr(head->x, head->y);
+    return ((*ptr != 0) && ((fruit.x != head->x) || (fruit.y != head->y)));
 }
 
 u8 snake_check_fruit(void) {
-    return (SNAKE_HEAD(&snake).x == fruit.x) && (SNAKE_HEAD(&snake).y == fruit.y);
+    TSnakeNode *head;
+
+    head = snake_get_head(&snake);
+    return (head->x == fruit.x) && (head->y == fruit.y);
 }
 
 
@@ -199,9 +204,12 @@ void read_keyboard_debug(void) {
 
 void show_debug() {
     u8 *ptr = cpct_getScreenPtr(CPCT_VMEM_START, 0, 0);
+    TSnakeNode *head;
+
+    head = snake_get_head(&snake);
     sprintf(
-        debug_info, "(%02x, %02x)  %02x %04x",
-        SNAKE_HEAD(&snake).x, SNAKE_HEAD(&snake).y, game_delay, fruit.ttl
+        debug_info, "[%02x %02x %02x]  (%02x %02x)",
+        head->x, head->y, snake.size, fruit.x, fruit.y
         );
     display_zstring(debug_info, ptr, 1, 0);
 }

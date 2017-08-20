@@ -33,8 +33,10 @@ void snake_small_init(TSnakeSmall *snake) {
 void snake_draw_head(TSnake *snake) {
     u8 *ptr;
     const char *sprite;
+    TSnakeNode *head;
 
-    ptr = get_tile_ptr(SNAKE_HEAD(snake).x, SNAKE_HEAD(snake).y);
+    head = snake_get_head(snake);
+    ptr = get_tile_ptr(head->x, head->y);
     /* cpct_drawSolidBox(ptr, 0xFF, TILE_WIDTH, TILE_HEIGHT); */
     if (snake->dx) {
         if (snake->dx == 1) {
@@ -55,58 +57,73 @@ void snake_draw_head(TSnake *snake) {
 void snake_draw_body(TSnake *snake) {
     u8 *ptr;
     const char *sprite;
+    TSnakeNode *head;
 
-    ptr = get_tile_ptr(SNAKE_HEAD(snake).x, SNAKE_HEAD(snake).y);
+    head = snake_get_head(snake);
+    ptr = get_tile_ptr(head->x, head->y);
     if (snake->dx) {
         sprite = SpriteSnakeBodyHorz;
     } else {
         sprite = SpriteSnakeBodyVert;
     }
-    cpct_drawSprite (sprite, ptr, TILE_WIDTH, TILE_HEIGHT);
+    cpct_drawSprite(sprite, ptr, TILE_WIDTH, TILE_HEIGHT);
 }
 
 void snake_erase_tail(TSnake *snake) {
     u8 *ptr;
+    TSnakeNode *tail;
 
-    ptr = get_tile_ptr(SNAKE_TAIL(snake).x, SNAKE_TAIL(snake).y);
+    tail = snake_get_tail(snake);
+    ptr = get_tile_ptr(tail->x, tail->y);
     cpct_drawSolidBox(ptr, 0, TILE_WIDTH, TILE_HEIGHT);
-
 }
 
-
 void snake_update(TSnake *snake) {
-    TSnakeNode head;
+    i8 x;
+    i8 y;
+    TSnakeNode *head;
 
-    head.x = SNAKE_HEAD(snake).x;
-    head.y = SNAKE_HEAD(snake).y;
+    head = snake_get_head(snake);
+    x = head->x;
+    y = head->y;
 
     if (snake->dx) { // horizontal movement
-        head.x += snake->dx;
-        if (head.x < 0) {
-            head.x = NUM_COLUMNS - 1;
-        } else if (head.x >= NUM_COLUMNS) {
-            head.x = 0;
+        x += snake->dx;
+        if (x < 0) {
+            x = NUM_COLUMNS - 1;
+        } else if (x >= NUM_COLUMNS) {
+            x = 0;
         }
     } else {
-        head.y += snake->dy;
-        if (head.y < 0) {
-            head.y = NUM_ROWS - 1;
-        } else if (head.y >= NUM_ROWS) {
-            head.y = 0;
+        y += snake->dy;
+        if (y < 0) {
+            y = NUM_ROWS - 1;
+        } else if (y >= NUM_ROWS) {
+            y = 0;
         }
     }
+
     // NOTE: if the maximum length of the snake is not a power of two an "if"
     // statement is required to work around index wrapping.
     snake->tail = (snake->tail - 1) & snake->mask;
     snake->head = (snake->head - 1) & snake->mask;
-    SNAKE_HEAD(snake).x = head.x;
-    SNAKE_HEAD(snake).y = head.y;
-}
 
+    head = snake_get_head(snake);
+    head->x = x;
+    head->y = y;
+}
 
 void snake_add_node(TSnake *snake) {
     if (snake->size < snake->mask) {
         snake->tail = (snake->tail + 1) & snake->mask;
         snake->size++;
     }
+}
+
+TSnakeNode *snake_get_head(TSnake *snake) {
+    return &snake->nodes[snake->head];
+}
+
+TSnakeNode *snake_get_tail(TSnake *snake) {
+    return &snake->nodes[snake->tail];
 }

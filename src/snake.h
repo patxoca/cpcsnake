@@ -3,9 +3,6 @@
 
 #include <cpctelera.h>
 
-#define SNAKE_HEAD(snake) (snake)->nodes[(snake)->head]
-#define SNAKE_TAIL(snake) (snake)->nodes[(snake)->tail]
-
 /* the implementation requires that the snake's max length MUST be a power of
  * two.
  */
@@ -46,5 +43,8 @@ extern void snake_draw_head(TSnake *snake);
 extern void snake_erase_tail(TSnake *snake);
 extern void snake_init(TSnake *snake);
 extern void snake_update(TSnake *snake);
+extern TSnakeNode *snake_get_head(TSnake *snake);
+extern TSnakeNode *snake_get_tail(TSnake *snake);
+
 
 #endif /* _SNAKE_H_ */
