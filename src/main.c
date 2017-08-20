@@ -18,17 +18,12 @@
 #include "grid.h"
 #include "levels.h"
 #include "music.h"
+#include "snake.h"
 #include "sprites.h"
 
 #define NUM_COLORS 9
 #define MODE 0
 
-
-/* Having a circular queue 256 entries log has a nice property,
- * incrementing/decrementing the head and tail indexes past the queue limits
- * automatically wraps them, no "if (out_of_bounds) adjust_index" required.
-*/
-#define MAX_SNAKE_LEN 256
 
 #if MODE == 0
 #define display_zstring(s, p, f, b) cpct_drawStringM0(s, p, f, b)
@@ -39,27 +34,6 @@
 #endif
 
 #define clear_screen() cpct_memset(CPCT_VMEM_START, 0, 0x4000)
-
-/*  _                      */
-/* | |_ _  _ _ __  ___ ___ */
-/* |  _| || | '_ \/ -_|_-< */
-/*  \__|\_, | .__/\___/__/ */
-/*      |__/|_|            */
-
-typedef struct {
-    i8 x;
-    i8 y;
-} TSnakeNode;
-
-typedef struct {
-    i8 dx;
-    i8 dy;
-    i8 updated;
-    u8 head;
-    u8 tail;
-    u8 size;
-    TSnakeNode nodes[MAX_SNAKE_LEN];
-} TSnake;
 
 typedef struct {
     i8 x;
@@ -75,7 +49,6 @@ typedef struct {
 
 const unsigned char palette[NUM_COLORS] = {0, 26, 25, 18, 15, 9, 6, 22, 3};
 
-TSnake snake;
 TFruit fruit;
 
 volatile u16 timer;
@@ -108,104 +81,10 @@ u8 cell_check_empty(i8 x, i8 y) {
     return *ptr == 0;
 }
 
+
 /*
- * Snake
+ * Collision detection
  */
-
-void snake_init(void) {
-    snake.dx = -1;
-    snake.dy = 0;
-    snake.updated = 0;
-    snake.head = 0;
-    snake.tail = 0;
-    snake.size = 1;
-    snake.nodes[0].x = NUM_COLUMNS / 2;
-    snake.nodes[0].y = NUM_ROWS / 2 - 4;
-}
-
-#define SNAKE_HEAD snake.nodes[snake.head]
-#define SNAKE_TAIL snake.nodes[snake.tail]
-
-void snake_draw_head() {
-    u8 *ptr;
-    const char *sprite;
-
-    ptr = get_tile_ptr(SNAKE_HEAD.x, SNAKE_HEAD.y);
-    /* cpct_drawSolidBox(ptr, 0xFF, TILE_WIDTH, TILE_HEIGHT); */
-    if (snake.dx) {
-        if (snake.dx == 1) {
-            sprite = SpriteSnakeHeadRight;
-        } else {
-            sprite = SpriteSnakeHeadLeft;
-        }
-    } else {
-        if (snake.dy == 1) {
-            sprite = SpriteSnakeHeadDown;
-        } else {
-            sprite = SpriteSnakeHeadUp;
-        }
-    }
-    cpct_drawSprite(sprite, ptr, TILE_WIDTH, TILE_HEIGHT);
-}
-
-void snake_draw_body() {
-    u8 *ptr;
-    const char *sprite;
-
-    ptr = get_tile_ptr(SNAKE_HEAD.x, SNAKE_HEAD.y);
-    if (snake.dx) {
-        sprite = SpriteSnakeBodyHorz;
-    } else {
-        sprite = SpriteSnakeBodyVert;
-    }
-    cpct_drawSprite (sprite, ptr, TILE_WIDTH, TILE_HEIGHT);
-}
-
-void snake_erase_tail() {
-    u8 *ptr;
-
-    ptr = get_tile_ptr(SNAKE_TAIL.x, SNAKE_TAIL.y);
-    cpct_drawSolidBox(ptr, 0, TILE_WIDTH, TILE_HEIGHT);
-
-}
-
-
-void snake_update(void) {
-    TSnakeNode head;
-
-    head.x = SNAKE_HEAD.x;
-    head.y = SNAKE_HEAD.y;
-
-    if (snake.dx) { // horizontal movement
-        head.x += snake.dx;
-        if (head.x < 0) {
-            head.x = NUM_COLUMNS - 1;
-        } else if (head.x >= NUM_COLUMNS) {
-            head.x = 0;
-        }
-    } else {
-        head.y += snake.dy;
-        if (head.y < 0) {
-            head.y = NUM_ROWS - 1;
-        } else if (head.y >= NUM_ROWS) {
-            head.y = 0;
-        }
-    }
-    // if MAX_SNAKE_LEN != 256 an "if" is required to work around index
-    // wrapping
-    snake.tail--;
-    snake.head--;
-    SNAKE_HEAD.x = head.x;
-    SNAKE_HEAD.y = head.y;
-}
-
-
-void snake_add_node(void) {
-    if (snake.size < MAX_SNAKE_LEN - 1) {
-        snake.tail++;
-        snake.size++;
-    }
-}
 
 u8 snake_check_collision(void) {
     /* Check if the snake head collides.
@@ -376,7 +255,6 @@ void game(void) {
                 fruit_init();
                 fruit_draw();
             }
-            snake.updated = 1;
             last_move = timer;
             /* cpct_setBorder(0); */
         }
