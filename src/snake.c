@@ -19,17 +19,6 @@ void snake_init(TSnake *snake) {
     snake->nodes[0].y = NUM_ROWS / 2 - 4;
 }
 
-void snake_small_init(TSnakeSmall *snake) {
-    snake->dx = -1;
-    snake->dy = 0;
-    snake->head = 0;
-    snake->tail = 0;
-    snake->size = 1;
-    snake->mask = SMALL_SNAKE_MASK;
-    snake->nodes[0].x = NUM_COLUMNS / 2;
-    snake->nodes[0].y = NUM_ROWS / 2 - 4;
-}
-
 void snake_draw_head(TSnake *snake) {
     u8 *ptr;
     const char *sprite;
