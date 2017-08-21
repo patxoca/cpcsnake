@@ -116,8 +116,9 @@ void fruit_init(void) {
         fruit.x = cpct_rand8() % NUM_COLUMNS;
         fruit.y = cpct_rand8() % NUM_ROWS;
     } while (!cell_check_empty(fruit.x, fruit.y));
-    // TTL = random value between
-    fruit.ttl = ((cpct_rand8() % 10) * 6 + 10) * 10;
+    // TTL = random value between 10 and 19 seconds. 14 is a factor that
+    // adjust the counter according to the value of game_delay (16).
+    fruit.ttl = ((cpct_rand8() % 10) + 1) * 14;
 }
 
 void fruit_tick(void) {
