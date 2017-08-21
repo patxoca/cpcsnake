@@ -21,6 +21,7 @@
 #include "music.h"
 #include "snake.h"
 #include "sprites.h"
+#include "timer.h"
 
 #define NUM_COLORS 9
 #define MODE 0
@@ -53,8 +54,6 @@ const unsigned char palette[NUM_COLORS] = {0, 26, 25, 18, 15, 9, 6, 22, 3};
 TSnake snake;
 TFruit fruit;
 
-volatile u16 timer;
-u16 last_move;
 u16 game_delay;
 
 u8 debug_enabled;
@@ -67,10 +66,6 @@ char debug_info[41];
 /* / _/ _ \/ _` / -_) */
 /* \__\___/\__,_\___| */
 
-
-void interrupt_handler(void) {
-    timer++;
-}
 
 /*
  * Cells/board
@@ -254,9 +249,11 @@ void game(void) {
     snake_init(&snake, NUM_COLUMNS / 2, NUM_ROWS / 2 - 4);
     fruit_init();
     fruit_draw();
+    timer_reset();
+
     while (1) {
         game_read_keys();
-        if (timer - last_move > game_delay) {
+        if (g_timer > game_delay) {
             read_keyboard_debug();
             if (debug_enabled) {
                 show_debug();
@@ -298,7 +295,7 @@ void game(void) {
                 display_u8(long_strike, 20, 0);
                 redraw_score = 0;
             }
-            last_move = timer;
+            timer_reset();
             /* cpct_setBorder(0); */
         }
     }
@@ -308,8 +305,6 @@ void game(void) {
 
 
 void main(void) {
-    timer = 0;
-    last_move = 0;
     game_delay = 16;
 
     debug_enabled = 0;
@@ -320,7 +315,7 @@ void main(void) {
     cpct_fw2hw(palette, NUM_COLORS);
     cpct_setPalette(palette, NUM_COLORS);
     cpct_setVideoMode(MODE);
-    cpct_setInterruptHandler(interrupt_handler);
+    timer_setup();
 
     while (1) {
         menu();

@@ -6,6 +6,7 @@
 
 #include <cpctelera.h>
 #include "snake.h"
+#include "timer.h"
 
 // One snake for each letter
 #define NUM_SNAKES 5
@@ -291,24 +292,20 @@ static void animation_step(void) {
 }
 
 
-extern volatile u16 timer;
-
 /*
  * Display the intro.
  */
 
 void intro(void) {
     u8 i;
-    u16 last_tick;
 
-    last_tick = 0;
     snakes_init();
     animation_init();
     for (i = 0; i < ANIMATION_NUM_STEPS; i++) {
         cpct_waitVSYNC();
         animation_step();
-        while (timer - last_tick < ANIMATION_DELAY) ;
-        last_tick = timer;
+        timer_reset();
+        while (g_timer < ANIMATION_DELAY) ;
     }
 
 }
