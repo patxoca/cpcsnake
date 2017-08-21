@@ -153,22 +153,22 @@ void game_read_keys(void) {
     if (!cpct_isAnyKeyPressed_f()) {
         return;
     }
-    if (cpct_isKeyPressed(Key_J) && snake.dy) {
+    if (cpct_isKeyPressed(Key_J) && !snake.dx) {
         snake.dx = -1;
         snake.dy = 0;
         return;
     }
-    if (cpct_isKeyPressed(Key_L) && snake.dy) {
+    if (cpct_isKeyPressed(Key_L) && !snake.dx) {
         snake.dx = 1;
         snake.dy = 0;
         return;
     }
-    if (cpct_isKeyPressed(Key_I) && snake.dx) {
+    if (cpct_isKeyPressed(Key_I) && !snake.dy) {
         snake.dx = 0;
         snake.dy = -1;
         return;
     }
-    if (cpct_isKeyPressed(Key_K) && snake.dx) {
+    if (cpct_isKeyPressed(Key_K) && !snake.dy) {
         snake.dx = 0;
         snake.dy = 1;
         return;
@@ -235,7 +235,7 @@ void game(void) {
     cpct_setBorder(1);
     cpct_akp_musicInit(G_Menu);
 
-    snake_init(&snake);
+    snake_init(&snake, NUM_COLUMNS / 2, NUM_ROWS / 2 - 4);
     fruit_init();
     fruit_draw();
     while (1) {

@@ -41,7 +41,7 @@ extern void snake_add_node(TSnake *snake);
 extern void snake_draw_body(TSnake *snake);
 extern void snake_draw_head(TSnake *snake);
 extern void snake_erase_tail(TSnake *snake);
-extern void snake_init(TSnake *snake);
+extern void snake_init(TSnake *snake, i8 x, i8 y);
 extern void snake_update(TSnake *snake);
 extern TSnakeNode *snake_get_head(TSnake *snake);
 extern TSnakeNode *snake_get_tail(TSnake *snake);

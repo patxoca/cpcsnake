@@ -8,15 +8,15 @@
  * Snake
  */
 
-void snake_init(TSnake *snake) {
-    snake->dx = -1;
+void snake_init(TSnake *snake, i8 x, i8 y) {
+    snake->dx = 0;
     snake->dy = 0;
     snake->head = 0;
     snake->tail = 0;
     snake->size = 1;
     snake->mask = BIG_SNAKE_MASK;
-    snake->nodes[0].x = NUM_COLUMNS / 2;
-    snake->nodes[0].y = NUM_ROWS / 2 - 4;
+    snake->nodes[0].x = x;
+    snake->nodes[0].y = y;
 }
 
 void snake_draw_head(TSnake *snake) {
