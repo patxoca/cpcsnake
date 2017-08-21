@@ -254,15 +254,21 @@ void game(void) {
                 fruit_init();
                 fruit_draw();
             }
+            // overwrites the head with a body sprite
             snake_draw_body(&snake);
             snake_erase_tail(&snake);
             snake_update(&snake);
             if (snake_check_collision()) {
+                // the collision must be checked before drawing the head,
+                // otherwise it will detect a false collision of the head with
+                // itself.
                 break;
             }
             snake_draw_head(&snake);
             if (snake_check_fruit()) {
                 snake_add_node(&snake);
+                // draw the new tail so that the fruit won't be put there.
+                snake_draw_tail(&snake);
                 fruit_init();
                 fruit_draw();
             }

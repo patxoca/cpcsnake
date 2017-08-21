@@ -58,6 +58,23 @@ void snake_draw_body(TSnake *snake) {
     cpct_drawSprite(sprite, ptr, TILE_WIDTH, TILE_HEIGHT);
 }
 
+void snake_draw_tail(TSnake *snake) {
+    u8 *ptr;
+    const char *sprite;
+    TSnakeNode *tail;
+    TSnakeNode *prev_tail;
+
+    tail = snake_get_tail(snake);
+    prev_tail = &snake->nodes[(snake->tail - 1) & snake->mask];
+    if (tail->x == prev_tail->x) {
+        sprite = SpriteSnakeBodyVert;
+    } else {
+        sprite = SpriteSnakeBodyHorz;
+    }
+    ptr = get_tile_ptr(tail->x, tail->y);
+    cpct_drawSprite(sprite, ptr, TILE_WIDTH, TILE_HEIGHT);
+}
+
 void snake_erase_tail(TSnake *snake) {
     u8 *ptr;
     TSnakeNode *tail;
@@ -108,6 +125,12 @@ void snake_add_node(TSnake *snake) {
     if (snake->size < snake->mask) {
         snake->tail = (snake->tail + 1) & snake->mask;
         snake->size++;
+        // NOTE: as long as the snake grows by eating fruits, one node at a
+        // time, it is not required to initialize the newly added node. In
+        // order to get to the fruit the snake will move at least one
+        // position. That warrants that there will be at least one discarded
+        // node in the queue, the previous tail, already initialized, that
+        // will be recycled into the new tail.
     }
 }
 
