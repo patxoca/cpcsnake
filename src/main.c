@@ -234,7 +234,8 @@ void menu(void) {
     do {
         cpct_scanKeyboard_f();
     } while (!cpct_isAnyKeyPressed_f());
-}
+    cpct_srand8((u32)g_timer);
+    }
 
 void game(void) {
     i8 score = 0;
