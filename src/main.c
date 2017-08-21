@@ -215,6 +215,18 @@ void show_debug() {
     display_zstring(debug_info, ptr, 1, 0);
 }
 
+void display_u8(u8 n, u8 x, u8 y) {
+    u8 *ptr;
+    char str[4];
+
+    str[0] = '0' + (n / 100);
+    str[1] = '0' + (n / 10) % 10;
+    str[2] = '0' + n % 10;
+    str[3] = 0;
+    ptr = cpct_getScreenPtr(CPCT_VMEM_START, x, y);
+    display_zstring(str, ptr, 1, 0);
+}
+
 void menu(void) {
     u8 *ptr;
 
@@ -230,6 +242,10 @@ void menu(void) {
 }
 
 void game(void) {
+    i8 score = 0;
+    i8 long_strike = 0;
+    u8 redraw_score = 1;
+
     clear_screen();
     draw_level(0);
     cpct_setBorder(1);
@@ -250,6 +266,8 @@ void game(void) {
             /* cpct_setBorder(2); */
             fruit_tick();
             if (fruit.ttl == 0) {
+                long_strike = 0;
+                redraw_score = 1;
                 fruit_erase();
                 fruit_init();
                 fruit_draw();
@@ -266,11 +284,19 @@ void game(void) {
             }
             snake_draw_head(&snake);
             if (snake_check_fruit()) {
+                score++;
+                long_strike++;
+                redraw_score = 1;
                 snake_add_node(&snake);
                 // draw the new tail so that the fruit won't be put there.
                 snake_draw_tail(&snake);
                 fruit_init();
                 fruit_draw();
+            }
+            if (redraw_score) {
+                display_u8(score, 0, 0);
+                display_u8(long_strike, 20, 0);
+                redraw_score = 0;
             }
             last_move = timer;
             /* cpct_setBorder(0); */
