@@ -1,13 +1,12 @@
 #include <cpctelera.h>
 #include "grid.h"
+#include "levels.h"
 #include "sprites.h"
 
 #define BRICK 0
 #define SAND 1
 
 #define END 0xFF
-
-#define NUM_LEVELS 1
 
 
 static const u8* const tile_set[] = {
@@ -26,8 +25,19 @@ static const u8 level_01[] = {
     END
 };
 
-static const u8* const levels[] = {
-    level_01
+static const u8 level_02[] = {
+     9, 0, BRICK,
+     9, 3, BRICK,
+     9, 6, BRICK,
+     9, 9, BRICK,
+     9, 12, BRICK,
+     9, 15, BRICK,
+     9, 18, BRICK,
+    END
+};
+
+static const u8* const levels[NUM_LEVELS] = {
+    level_01, level_02
 };
 
 void draw_level(u8 n) {

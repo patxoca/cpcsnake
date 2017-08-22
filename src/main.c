@@ -236,15 +236,17 @@ void menu(void) {
         cpct_scanKeyboard_f();
     } while (!cpct_isAnyKeyPressed_f());
     cpct_srand8((u32)g_timer);
-    }
+}
 
-void game(void) {
-    i8 score = 0;
-    i8 long_strike = 0;
+i8 score = 0;
+i8 long_strike = 0;
+
+u8 game_loop(u8 level) {
     u8 redraw_score = 1;
+    u8 game_over = 0;
 
     clear_screen();
-    draw_level(0);
+    draw_level(level);
     cpct_setBorder(1);
     cpct_akp_musicInit(G_Menu);
 
@@ -279,12 +281,16 @@ void game(void) {
                 // the collision must be checked before drawing the head,
                 // otherwise it will detect a false collision of the head with
                 // itself.
+                game_over = 1;
                 break;
             }
             snake_draw_head(&snake);
             if (snake_check_fruit()) {
                 score++;
                 long_strike++;
+                if (score == 50) {
+                    break;
+                }
                 redraw_score = 1;
                 snake_add_node(&snake);
                 // draw the new tail so that the fruit won't be put there.
@@ -301,10 +307,24 @@ void game(void) {
             /* cpct_setBorder(0); */
         }
     }
+
     cpct_setBorder(2);
     cpct_akp_stop();
+
+    return game_over;
 }
 
+void game(void) {
+    u8 level;
+    u8 game_over = 0;
+
+    for (level = 0; (level < NUM_LEVELS) && !game_over; level++) {
+        score = 0;
+        long_strike = 0;
+        game_over = game_loop(level);
+        // TODO: display either a "level complete" or a "game over" screen
+    }
+}
 
 void main(void) {
     game_delay = 16;
