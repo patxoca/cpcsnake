@@ -19,7 +19,7 @@ void snake_init(TSnake *snake, i8 x, i8 y) {
     snake->nodes[0].y = y;
 }
 
-void snake_draw_head(TSnake *snake) {
+void snake_draw_head(TSnake *snake) __z88dk_fastcall {
     u8 *ptr;
     const char *sprite;
     TSnakeNode *head;
@@ -43,7 +43,7 @@ void snake_draw_head(TSnake *snake) {
     cpct_drawSprite(sprite, ptr, TILE_WIDTH, TILE_HEIGHT);
 }
 
-void snake_draw_body(TSnake *snake) {
+void snake_draw_body(TSnake *snake) __z88dk_fastcall {
     u8 *ptr;
     const char *sprite;
     TSnakeNode *head;
@@ -58,7 +58,7 @@ void snake_draw_body(TSnake *snake) {
     cpct_drawSprite(sprite, ptr, TILE_WIDTH, TILE_HEIGHT);
 }
 
-void snake_draw_tail(TSnake *snake) {
+void snake_draw_tail(TSnake *snake) __z88dk_fastcall {
     u8 *ptr;
     const char *sprite;
     TSnakeNode *tail;
@@ -75,7 +75,7 @@ void snake_draw_tail(TSnake *snake) {
     cpct_drawSprite(sprite, ptr, TILE_WIDTH, TILE_HEIGHT);
 }
 
-void snake_erase_tail(TSnake *snake) {
+void snake_erase_tail(TSnake *snake) __z88dk_fastcall {
     u8 *ptr;
     TSnakeNode *tail;
 
@@ -84,7 +84,7 @@ void snake_erase_tail(TSnake *snake) {
     cpct_drawSolidBox(ptr, 0, TILE_WIDTH, TILE_HEIGHT);
 }
 
-void snake_update(TSnake *snake) {
+void snake_update(TSnake *snake) __z88dk_fastcall {
     i8 x;
     i8 y;
     TSnakeNode *head;
@@ -121,7 +121,7 @@ void snake_update(TSnake *snake) {
     head->y = y;
 }
 
-void snake_add_node(TSnake *snake) {
+void snake_add_node(TSnake *snake) __z88dk_fastcall {
     if (snake->size < snake->mask) {
         snake->tail = (snake->tail + 1) & snake->mask;
         snake->size++;
@@ -134,10 +134,10 @@ void snake_add_node(TSnake *snake) {
     }
 }
 
-TSnakeNode *snake_get_head(TSnake *snake) {
+TSnakeNode *snake_get_head(TSnake *snake) __z88dk_fastcall {
     return &snake->nodes[snake->head];
 }
 
-TSnakeNode *snake_get_tail(TSnake *snake) {
+TSnakeNode *snake_get_tail(TSnake *snake) __z88dk_fastcall {
     return &snake->nodes[snake->tail];
 }

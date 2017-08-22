@@ -37,15 +37,14 @@ typedef struct {
     TSnakeNode nodes[SMALL_SNAKE_SIZE];
 } TSnakeSmall;
 
-extern void snake_add_node(TSnake *snake);
-extern void snake_draw_body(TSnake *snake);
-extern void snake_draw_head(TSnake *snake);
-extern void snake_draw_tail(TSnake *snake);
-extern void snake_erase_tail(TSnake *snake);
+extern void snake_add_node(TSnake *snake) __z88dk_fastcall;
+extern void snake_draw_body(TSnake *snake) __z88dk_fastcall;
+extern void snake_draw_head(TSnake *snake) __z88dk_fastcall;
+extern void snake_draw_tail(TSnake *snake) __z88dk_fastcall;
+extern void snake_erase_tail(TSnake *snake) __z88dk_fastcall;
 extern void snake_init(TSnake *snake, i8 x, i8 y);
-extern void snake_update(TSnake *snake);
-extern TSnakeNode *snake_get_head(TSnake *snake);
-extern TSnakeNode *snake_get_tail(TSnake *snake);
-
+extern void snake_update(TSnake *snake) __z88dk_fastcall;
+extern TSnakeNode *snake_get_head(TSnake *snake) __z88dk_fastcall;
+extern TSnakeNode *snake_get_tail(TSnake *snake) __z88dk_fastcall;
 
 #endif /* _SNAKE_H_ */
