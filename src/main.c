@@ -332,7 +332,6 @@ void main(void) {
     debug_enabled = 0;
     debug_paused = 0;
 
-    cpct_disableFirmware();
     cpct_setBorder(0);
     cpct_fw2hw(palette, NUM_COLORS);
     cpct_setPalette(palette, NUM_COLORS);
