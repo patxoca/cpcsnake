@@ -1,5 +1,5 @@
 ##-----------------------------LICENSE NOTICE------------------------------------
-##  This file is part of CPCtelera: An Amstrad CPC Game Engine 
+##  This file is part of CPCtelera: An Amstrad CPC Game Engine
 ##  Copyright (C) 2015 ronaldo / Fremos / Cheesetea / ByteRealms (@FranGallegoBR)
 ##
 ##  This program is free software: you can redistribute it and/or modify
@@ -36,3 +36,8 @@ include cfg/build_config.mk
 ## USE GLOBAL MAKEFILE (general rules for building CPCtelera projects)
 ##
 include $(CPCT_PATH)/cfg/global_main_makefile.mk
+
+
+tags:
+	etags src/*.[ch]
+	etags --append $$(find $$CPCT_PATH/src -type f)
