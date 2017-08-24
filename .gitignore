@@ -4,3 +4,5 @@ csnake.dsk
 obj/*
 tmp/*
 .vscode
+doc/build
+TAGS
