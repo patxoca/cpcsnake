@@ -1,4 +1,5 @@
 #include <cpctelera.h>
+#include "draweng.h"
 #include "grid.h"
 #include "snake.h"
 #include "sprites.h"
@@ -26,7 +27,6 @@ void snake_draw_head(TSnake *snake) __z88dk_fastcall {
 
     head = snake_get_head(snake);
     ptr = get_tile_ptr(head->x, head->y);
-    /* cpct_drawSolidBox(ptr, 0xFF, TILE_WIDTH, TILE_HEIGHT); */
     if (snake->dx) {
         if (snake->dx == 1) {
             sprite = SpriteSnakeHeadRight;
@@ -40,7 +40,7 @@ void snake_draw_head(TSnake *snake) __z88dk_fastcall {
             sprite = SpriteSnakeHeadUp;
         }
     }
-    cpct_drawSprite(sprite, ptr, TILE_WIDTH, TILE_HEIGHT);
+    de_draw(sprite, ptr, TILE_WIDTH, TILE_HEIGHT);
 }
 
 void snake_draw_body(TSnake *snake) __z88dk_fastcall {
@@ -55,9 +55,10 @@ void snake_draw_body(TSnake *snake) __z88dk_fastcall {
     } else {
         sprite = SpriteSnakeBodyVert;
     }
-    cpct_drawSprite(sprite, ptr, TILE_WIDTH, TILE_HEIGHT);
+    de_draw(sprite, ptr, TILE_WIDTH, TILE_HEIGHT);
 }
 
+// TODO: no se utiliza en ningu sitio. Eliminar (?)
 void snake_draw_tail(TSnake *snake) __z88dk_fastcall {
     u8 *ptr;
     const char *sprite;
@@ -72,7 +73,7 @@ void snake_draw_tail(TSnake *snake) __z88dk_fastcall {
         sprite = SpriteSnakeBodyHorz;
     }
     ptr = get_tile_ptr(tail->x, tail->y);
-    cpct_drawSprite(sprite, ptr, TILE_WIDTH, TILE_HEIGHT);
+    de_draw(sprite, ptr, TILE_WIDTH, TILE_HEIGHT);
 }
 
 void snake_erase_tail(TSnake *snake) __z88dk_fastcall {
@@ -81,7 +82,7 @@ void snake_erase_tail(TSnake *snake) __z88dk_fastcall {
 
     tail = snake_get_tail(snake);
     ptr = get_tile_ptr(tail->x, tail->y);
-    cpct_drawSolidBox(ptr, 0, TILE_WIDTH, TILE_HEIGHT);
+    de_draw(SpriteBlack, ptr, TILE_WIDTH, TILE_HEIGHT);
 }
 
 void snake_update(TSnake *snake) __z88dk_fastcall {

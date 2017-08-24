@@ -10,5 +10,6 @@ extern const char SpriteSnakeHeadDown[];
 extern const char SpriteSnakeHeadLeft[];
 extern const char SpriteSnakeHeadRight[];
 extern const char SpriteSnakeHeadUp[];
+extern const char SpriteBlack[];
 
 #endif /* _SPRITES_H_ */

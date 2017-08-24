@@ -5,6 +5,7 @@
  */
 
 #include <cpctelera.h>
+#include "draweng.h"
 #include "snake.h"
 #include "timer.h"
 
@@ -287,6 +288,7 @@ static void animation_step(void) {
             snake_draw_body((TSnake *)snk);
             snake_update((TSnake *)snk);
             snake_draw_head((TSnake *)snk);
+            de_update();
         }
     }
 }
@@ -299,6 +301,7 @@ static void animation_step(void) {
 void intro(void) {
     u8 i;
 
+    de_reset();
     snakes_init();
     animation_init();
     for (i = 0; i < ANIMATION_NUM_STEPS; i++) {

@@ -16,6 +16,7 @@
 #include <cpctelera.h>
 #include <stdio.h>
 #include "collmap.h"
+#include "draweng.h"
 #include "grid.h"
 #include "intro.h"
 #include "levels.h"
@@ -111,15 +112,14 @@ void fruit_draw() {
     u8 *ptr;
 
     ptr = get_tile_ptr(fruit.x, fruit.y);
-    /* cpct_drawSolidBox(ptr, 0x0C, TILE_WIDTH, TILE_HEIGHT); */
-    cpct_drawSprite(SpriteRock, ptr, TILE_WIDTH, TILE_HEIGHT);
+    de_draw(SpriteRock, ptr, TILE_WIDTH, TILE_HEIGHT);
 }
 
 void fruit_erase() {
     u8 *ptr;
 
     ptr = get_tile_ptr(fruit.x, fruit.y);
-    cpct_drawSolidBox(ptr, 0x0, TILE_WIDTH, TILE_HEIGHT);
+    de_draw(SpriteBlack, ptr, TILE_WIDTH, TILE_HEIGHT);
 }
 
 /*
@@ -229,6 +229,7 @@ u8 game_loop(u8 level) {
     TSnakeNode *node;
 
     clear_screen();
+    de_reset();
     draw_level(level);
     cpct_setBorder(1);
     cpct_akp_musicInit(G_Menu);
@@ -245,9 +246,6 @@ u8 game_loop(u8 level) {
             if (debug_enabled) {
                 show_debug();
             }
-            cpct_waitVSYNC();
-            cpct_akp_musicPlay();
-            /* cpct_setBorder(2); */
             fruit_tick();
             if (fruit.ttl == 0) {
                 long_strike = 0;
@@ -289,8 +287,13 @@ u8 game_loop(u8 level) {
                 display_u8(long_strike, 20, 0);
                 redraw_score = 0;
             }
+            cpct_waitVSYNC();
+            /* cpct_setBorder(HW_RED); */
+            cpct_akp_musicPlay();
+            de_update();
+
             timer_reset();
-            /* cpct_setBorder(0); */
+            /* cpct_setBorder(HW_GREEN); */
         }
     }
 
@@ -322,6 +325,7 @@ void main(void) {
     cpct_fw2hw(palette, NUM_COLORS);
     cpct_setPalette(palette, NUM_COLORS);
     cpct_setVideoMode(MODE);
+    de_init();
     timer_setup();
 
     while (1) {
