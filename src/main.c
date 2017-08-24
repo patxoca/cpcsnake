@@ -15,6 +15,7 @@
 
 #include <cpctelera.h>
 #include <stdio.h>
+#include "collmap.h"
 #include "grid.h"
 #include "intro.h"
 #include "levels.h"
@@ -68,35 +69,16 @@ char debug_info[41];
 
 
 /*
- * Cells/board
- */
-
-u8 cell_check_empty(i8 x, i8 y) {
-    u8 *ptr;
-
-    ptr = get_tile_center_ptr(x, y);
-    return *ptr == 0;
-}
-
-
-/*
  * Collision detection
  */
 
 u8 snake_check_collision(void) {
     /* Check if the snake head collides.
-     *
-     * By the way it works (looking at the video memory) this function must be
-     * called after the snake state has been updated but before is has been
-     * drawn to the screen, otherwise the head will collide with itself.
-     *
      */
-    u8 *ptr;
     TSnakeNode *head;
 
     head = snake_get_head(&snake);
-    ptr = get_tile_center_ptr(head->x, head->y);
-    return ((*ptr != 0) && ((fruit.x != head->x) || (fruit.y != head->y)));
+    return (coma_check(head->x, head->y) != COMA_EMPTY);
 }
 
 u8 snake_check_fruit(void) {
@@ -115,7 +97,7 @@ void fruit_init(void) {
     do {
         fruit.x = cpct_rand8() % NUM_COLUMNS;
         fruit.y = cpct_rand8() % NUM_ROWS;
-    } while (!cell_check_empty(fruit.x, fruit.y));
+    } while (coma_check(fruit.x, fruit.y) != COMA_EMPTY);
     // TTL = random value between 10 and 19 seconds. 14 is a factor that
     // adjust the counter according to the value of game_delay (16).
     fruit.ttl = ((cpct_rand8() % 10) + 1) * 14;
@@ -244,6 +226,7 @@ i8 long_strike = 0;
 u8 game_loop(u8 level) {
     u8 redraw_score = 1;
     u8 game_over = 0;
+    TSnakeNode *node;
 
     clear_screen();
     draw_level(level);
@@ -273,18 +256,20 @@ u8 game_loop(u8 level) {
                 fruit_init();
                 fruit_draw();
             }
-            // overwrites the head with a body sprite
+            // overwrites the head with a body node/sprite
+            node = snake_get_head(&snake);
+            coma_set(node->x, node->y, COMA_FULL);
             snake_draw_body(&snake);
+            // erases the tail
+            node = snake_get_tail(&snake);
+            coma_clear(node->x, node->y);
             snake_erase_tail(&snake);
             snake_update(&snake);
+            snake_draw_head(&snake);
             if (snake_check_collision()) {
-                // the collision must be checked before drawing the head,
-                // otherwise it will detect a false collision of the head with
-                // itself.
                 game_over = 1;
                 break;
             }
-            snake_draw_head(&snake);
             if (snake_check_fruit()) {
                 score++;
                 long_strike++;
@@ -293,8 +278,9 @@ u8 game_loop(u8 level) {
                 }
                 redraw_score = 1;
                 snake_add_node(&snake);
-                // draw the new tail so that the fruit won't be put there.
-                snake_draw_tail(&snake);
+                // mark the new tail so that the fruit won't be put there.
+                node = snake_get_tail(&snake);
+                coma_set(node->x, node->y, COMA_FULL);
                 fruit_init();
                 fruit_draw();
             }

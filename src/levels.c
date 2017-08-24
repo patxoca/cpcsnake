@@ -1,4 +1,5 @@
 #include <cpctelera.h>
+#include "collmap.h"
 #include "grid.h"
 #include "levels.h"
 #include "sprites.h"
@@ -47,10 +48,12 @@ void draw_level(u8 n) {
     u8 y;
     u8 tile_index;
 
+    coma_reset();
     while (*level != END) {
         x = *level++;
         y = *level++;
         tile_index = *level++;
+        coma_set(x, y, COMA_FULL);
         ptr = get_tile_ptr(x, y);
         cpct_drawSprite(tile_set[tile_index], ptr, TILE_WIDTH, TILE_HEIGHT);
     }
