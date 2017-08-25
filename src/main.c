@@ -19,6 +19,7 @@
 #include "draweng.h"
 #include "grid.h"
 #include "intro.h"
+#include "kbd.h"
 #include "levels.h"
 #include "music.h"
 #include "snake.h"
@@ -210,19 +211,41 @@ void menu(void) {
 
     clear_screen();
     intro();
-    ptr = get_pixel_ptr(0, 136);
-    display_zstring("  Press any key to", ptr, 1, 0);
-    ptr = get_pixel_ptr(0, 146);
-    display_zstring("  start a new game", ptr, 1, 0);
-    do {
-        cpct_scanKeyboard_f();
-    } while (!cpct_isAnyKeyPressed_f());
+    ptr = get_pixel_ptr(2 * 4, 136);
+    display_zstring("Press any key to", ptr, 1, 0);
+    ptr = get_pixel_ptr(2 * 4, 146);
+    display_zstring("start a new game", ptr, 1, 0);
+    kbd_wait_any_key(1);
     cpct_srand8((u32)g_timer);
 }
 
-i8 score;
-i8 curr_strike;
-i8 long_strike;
+void display_level_complete(void) {
+    u8 *ptr;
+
+    ptr = get_pixel_ptr(2 * 4, 56);
+    display_zstring("LEVEL COMPLETED!!", ptr, 1, 0);
+    ptr = get_pixel_ptr(2 * 4, 136);
+    display_zstring("Press any key to", ptr, 1, 0);
+    ptr = get_pixel_ptr(2 * 4, 146);
+    display_zstring("start next level", ptr, 1, 0);
+    kbd_wait_any_key(1);
+}
+
+void display_game_over(void) {
+    u8 *ptr;
+
+    ptr = get_pixel_ptr(6 * 4, 56);
+    display_zstring("GAME OVER", ptr, 1, 0);
+    ptr = get_pixel_ptr(2 * 4, 136);
+    display_zstring("Press any key to", ptr, 1, 0);
+    ptr = get_pixel_ptr(3 * 4, 146);
+    display_zstring("return to menu", ptr, 1, 0);
+    kbd_wait_any_key(1);
+}
+
+u8 score;
+u8 curr_strike;
+u8 long_strike;
 
 u8 game_loop(const TLevel *level) {
     u8 redraw_score = 1;
@@ -317,8 +340,12 @@ void game(void) {
         score = 0;
         curr_strike = 0;
         long_strike = 0;
-        // TODO: display either a "level complete" or a "game over" screen
         game_over = game_loop(&g_levels[level]);
+        if (game_over) {
+            display_game_over();
+        } else {
+            display_level_complete();
+        }
     }
 }
 
