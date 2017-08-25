@@ -63,6 +63,10 @@ u8 debug_enabled;
 u8 debug_paused;
 char debug_info[41];
 
+u8 score;
+u8 curr_strike;
+u8 long_strike;
+
 
 /*             _      */
 /*  __ ___  __| |___  */
@@ -242,10 +246,6 @@ void display_game_over(void) {
     display_zstring("return to menu", ptr, 1, 0);
     kbd_wait_any_key(1);
 }
-
-u8 score;
-u8 curr_strike;
-u8 long_strike;
 
 u8 game_loop(const TLevel *level) {
     u8 redraw_score = 1;
