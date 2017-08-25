@@ -61,6 +61,7 @@ u16 game_delay;
 
 u8 debug_enabled;
 u8 debug_paused;
+u8 debug_skip_level;
 char debug_info[41];
 
 u8 score;
@@ -170,6 +171,9 @@ void read_keyboard_debug(void) {
     if (cpct_isKeyPressed(Key_D)) {
         debug_enabled = !debug_enabled;
     }
+    if (cpct_isKeyPressed(Key_Q)) {
+        debug_skip_level = 1;
+    }
     if (cpct_isKeyPressed(Key_A)) {
         snake_add_node(&snake);
     }
@@ -264,6 +268,7 @@ u8 game_loop(const TLevel *level) {
     fruit_draw();
     timer_reset();
     target = level->target;
+    debug_skip_level = 0;
 
     while (1) {
         game_read_keys();
@@ -271,6 +276,9 @@ u8 game_loop(const TLevel *level) {
             read_keyboard_debug();
             if (debug_enabled) {
                 show_debug();
+            }
+            if (debug_skip_level) {
+                break;
             }
             fruit_tick();
             if (fruit.ttl == 0) {
