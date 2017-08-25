@@ -46,7 +46,7 @@ static const u8 level_torus[] = {
 static const u8 level_madtorus[] = {
     9, 0,   REP_VER | 19, BRICK,
     0, 6,   REP_HOR | 9,  BRICK,
-    10, 12, REP_HOR | 9, BRICK,
+    10, 12, REP_HOR | 10, BRICK,
     END
 };
 
