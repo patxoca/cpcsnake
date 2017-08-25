@@ -312,9 +312,9 @@ u8 game_loop(const TLevel *level) {
                 if (curr_strike > long_strike) {
                     long_strike = curr_strike;
                 }
-                display_u8(score, 11, 0);
-                display_u8(curr_strike, 34, 0);
-                display_u8(long_strike, 57, 0);
+                display_u8(score, 11, 1);
+                display_u8(curr_strike, 34, 1);
+                display_u8(long_strike, 57, 1);
                 redraw_score = 0;
             }
             timer_reset();
