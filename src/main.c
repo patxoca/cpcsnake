@@ -220,8 +220,9 @@ void menu(void) {
     cpct_srand8((u32)g_timer);
 }
 
-i8 score = 0;
-i8 long_strike = 0;
+i8 score;
+i8 curr_strike;
+i8 long_strike;
 
 u8 game_loop(u8 level) {
     u8 redraw_score = 1;
@@ -248,7 +249,7 @@ u8 game_loop(u8 level) {
             }
             fruit_tick();
             if (fruit.ttl == 0) {
-                long_strike = 0;
+                curr_strike = 0;
                 redraw_score = 1;
                 fruit_erase();
                 fruit_init();
@@ -270,7 +271,7 @@ u8 game_loop(u8 level) {
             }
             if (snake_check_fruit()) {
                 score++;
-                long_strike++;
+                curr_strike++;
                 if (score == 50) {
                     break;
                 }
@@ -283,8 +284,12 @@ u8 game_loop(u8 level) {
                 fruit_draw();
             }
             if (redraw_score) {
-                display_u8(score, 0, 0);
-                display_u8(long_strike, 20, 0);
+                if (curr_strike > long_strike) {
+                    long_strike = curr_strike;
+                }
+                display_u8(score, 11, 0);
+                display_u8(curr_strike, 34, 0);
+                display_u8(long_strike, 57, 0);
                 redraw_score = 0;
             }
             timer_reset();
@@ -308,6 +313,7 @@ void game(void) {
 
     for (level = 0; (level < NUM_LEVELS) && !game_over; level++) {
         score = 0;
+        curr_strike = 0;
         long_strike = 0;
         game_over = game_loop(level);
         // TODO: display either a "level complete" or a "game over" screen
