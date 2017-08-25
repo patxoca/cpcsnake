@@ -1,8 +1,23 @@
 #ifndef _LEVELS_H_
 #define _LEVELS_H_
 
-#define NUM_LEVELS 2
+#include <cpctelera.h>
 
-void draw_level(u8 n);
+#define NUM_LEVELS 3
+
+typedef struct {
+    u8 x;              // x inicial de la serpiente
+    u8 y;              // y inicial de la serpiente
+    const char *title; // nombre del nivel
+    const u8 *map;     // mapa del nivel
+    u8 target;         // nombre de frutas que hay que comer para dar por
+                       // finalizado el nivel
+} TLevel;
+
+
+extern const TLevel g_levels[NUM_LEVELS];
+
+
+void draw_level(const TLevel *level);
 
 #endif /* _LEVELS_H_ */

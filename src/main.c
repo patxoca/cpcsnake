@@ -224,9 +224,10 @@ i8 score;
 i8 curr_strike;
 i8 long_strike;
 
-u8 game_loop(u8 level) {
+u8 game_loop(const TLevel *level) {
     u8 redraw_score = 1;
     u8 game_over = 0;
+    u8 target;
     TSnakeNode *node;
 
     clear_screen();
@@ -235,10 +236,11 @@ u8 game_loop(u8 level) {
     cpct_setBorder(1);
     cpct_akp_musicInit(G_Menu);
 
-    snake_init(&snake, NUM_COLUMNS / 2, NUM_ROWS / 2 - 4);
+    snake_init(&snake, level->x, level->y);
     fruit_init();
     fruit_draw();
     timer_reset();
+    target = level->target;
 
     while (1) {
         game_read_keys();
@@ -272,7 +274,7 @@ u8 game_loop(u8 level) {
             if (snake_check_fruit()) {
                 score++;
                 curr_strike++;
-                if (score == 50) {
+                if (score == target) {
                     break;
                 }
                 redraw_score = 1;
@@ -315,8 +317,8 @@ void game(void) {
         score = 0;
         curr_strike = 0;
         long_strike = 0;
-        game_over = game_loop(level);
         // TODO: display either a "level complete" or a "game over" screen
+        game_over = game_loop(&g_levels[level]);
     }
 }
 
