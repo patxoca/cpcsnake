@@ -30,7 +30,7 @@ static const u8* const tile_set[] = {
  *
  */
 
-static const u8 level_00[] = {
+static const u8 level_classic[] = {
     0,  0, REP_HOR | 20, BRICK,
     0,  1, REP_VER | 17, BRICK,
     19, 1, REP_VER | 17, BRICK,
@@ -38,12 +38,19 @@ static const u8 level_00[] = {
     END
 };
 
-static const u8 level_01[] = {
+static const u8 level_torus[] = {
     9, 9, REP_HOR | 2, BRICK,
     END
 };
 
-static const u8 level_02[] = {
+static const u8 level_madtorus[] = {
+    9, 0,   REP_VER | 19, BRICK,
+    0, 6,   REP_HOR | 9,  BRICK,
+    10, 12, REP_HOR | 9, BRICK,
+    END
+};
+
+static const u8 level_ordeal[] = {
      9,  0, REP_HOR | 2, BRICK,
      9,  3, REP_HOR | 2, BRICK,
      9,  6, REP_HOR | 2, BRICK,
@@ -55,9 +62,10 @@ static const u8 level_02[] = {
 };
 
 const TLevel g_levels[NUM_LEVELS] = {
-    {9, 9,   "Classic", level_00, 10},
-    {9, 4,   "Torus",   level_01, 10},
-    {15, 10, "Ordeal",  level_02, 40}
+    {9, 9,   "Classic", level_classic,  10},
+    {9, 4,   "Torus",   level_torus,    20},
+    {6, 10,  "Madtor",  level_madtorus, 30},
+    {15, 10, "Ordeal",  level_ordeal,   40}
 };
 
 void draw_level(const TLevel *level) {

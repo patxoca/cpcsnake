@@ -3,7 +3,7 @@
 
 #include <cpctelera.h>
 
-#define NUM_LEVELS 3
+#define NUM_LEVELS 4
 
 typedef struct {
     u8 x;              // x inicial de la serpiente
