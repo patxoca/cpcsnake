@@ -287,14 +287,13 @@ u8 game_loop(u8 level) {
                 display_u8(long_strike, 20, 0);
                 redraw_score = 0;
             }
-            cpct_waitVSYNC();
-            /* cpct_setBorder(HW_RED); */
-            cpct_akp_musicPlay();
-            de_update();
-
             timer_reset();
-            /* cpct_setBorder(HW_GREEN); */
         }
+        cpct_waitVSYNC();
+        /* cpct_setBorder(HW_RED); */
+        cpct_akp_musicPlay();
+        de_update();
+        /* cpct_setBorder(HW_GREEN); */
     }
 
     cpct_setBorder(2);
