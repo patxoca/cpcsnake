@@ -161,28 +161,34 @@ void game_read_keys(void) {
 
 
 void read_keyboard_debug(void) {
-    cpct_scanKeyboard_f();
-    if (!cpct_isAnyKeyPressed_f()) {
-        return;
-    }
-    if (cpct_isKeyPressed(Key_P)) {
+    static const cpct_keyID keys[] = {
+        Key_P, Key_D, Key_Q, Key_A, Key_W, Key_S,
+        0 /* sentinel */
+    };
+
+    /* NOTE: esta función se ejecutará tras game_read_keys, con lo que podemos
+     * asumir que se ha llamado a cpct_scanKeyboard o similar.
+     */
+    kbd_update(keys);
+
+    if (kbd_test_keyup(Key_P)) {
         debug_paused = !debug_paused;
     }
-    if (cpct_isKeyPressed(Key_D)) {
+    if (kbd_test_keyup(Key_D)) {
         debug_enabled = !debug_enabled;
     }
-    if (cpct_isKeyPressed(Key_Q)) {
+    if (kbd_test_keyup(Key_Q)) {
         debug_skip_level = 1;
     }
-    if (cpct_isKeyPressed(Key_A)) {
+    if (kbd_test_keyup(Key_A)) {
         snake_add_node(&snake);
     }
-    if (cpct_isKeyPressed(Key_W)) {
+    if (kbd_test_keyup(Key_W)) {
         if (game_delay < 50) {
             game_delay += 1;
         }
     }
-    if (cpct_isKeyPressed(Key_S)) {
+    if (kbd_test_keyup(Key_S)) {
         if (game_delay > 1) {
             game_delay -= 1;
         }
@@ -272,8 +278,8 @@ u8 game_loop(const TLevel *level) {
 
     while (1) {
         game_read_keys();
+        read_keyboard_debug();
         if (g_timer > game_delay) {
-            read_keyboard_debug();
             if (debug_enabled) {
                 show_debug();
             }
@@ -368,6 +374,7 @@ void main(void) {
     cpct_setPalette(palette, NUM_COLORS);
     cpct_setVideoMode(MODE);
     de_init();
+    kbd_init();
     timer_setup();
 
     while (1) {
