@@ -40,4 +40,6 @@ include $(CPCT_PATH)/cfg/global_main_makefile.mk
 
 tags:
 	etags src/*.[ch]
-	etags --append $$(find $$CPCT_PATH/src -type f)
+	etags --declarations \
+		  --append \
+		  $$(find $$CPCT_PATH/src -type f -name \*.[chs])
