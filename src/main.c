@@ -223,6 +223,21 @@ void display_u8(u8 n, u8 x, u8 y) {
 void menu(void) {
     u8 *ptr;
 
+    /* TODO: el menú tiene las opciones:
+     * - jugar
+     * - seleccionar dificultad (basado en DOOM):
+     *   - I'm too young to die
+     *   - Hey, not too rough
+     *   - Hurt me plenty
+     *   - Ultra-Violence
+     *   - Nightmare!
+     *   La dificultad influye en la velocidad (game_delay) y en el TTL de las
+     *   frutas. Probablemente solo tres niveles de dificultad (lento, normal,
+     *   rápido).
+     * - música on/off
+     * - definir teclas
+    */
+
     clear_screen();
     intro();
     ptr = get_pixel_ptr(2 * 4, 136);
