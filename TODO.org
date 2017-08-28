@@ -1,0 +1,93 @@
+#+TITLE: TODOs
+#+AUTHOR: Alexis Roda
+
+#+TODO: TODO STRT HOLD PAUS(@) DONE(@)
+
+#+TAGS: bug:enh:frq
+
+* Pendiente
+
+Cosas por probar, sin ningún orden específico.
+
+** TODO mejorar gestión del teclado
+
+Actualmente la gestión de teclado genera los /eventos/ en el /keyup/.
+Tiene más sentido que se generen en el /keydown/.
+
+Mirar el coste de monitorizar ambos eventos.
+
+Añadir función ~kbd_reset~.
+
+** TODO añadir un fondo a la pantalla de juego
+
+Provar técnicas para preservar el fondo:
+
+- copiar fondo -> pintar sprite -> restaurar fondo copiado
+
+  - coste fijo para el buffer de backup.
+
+  - coste fijo para copia de/a pantalla a/de buffer.
+
+- usar el mapa de colisiones (que pasaria a ser /el mapa/ a secas):
+
+  - ampliar el tamaño de los mapas para ajustarlo a la cuadrícula
+    (ahora son compactos).
+
+  - modificar la rutina de detección de colisiones, algunos elementos
+    del mapa no producirán colisiones (tiles con índice mayor que
+    cierto valor o cierto bit activo ...).
+
+  - no hace falta preservar el contenido, se pinta(n) el(los) tile(s).
+
+- en un [[https://www.youtube.com/watch?v=QWFMmgvBHuA][vídeo de 8BP]] se comenta una técnica consistente en utilizar
+  colores (pens?) diferentes para el fondo y el sprite (creo que
+  propone 2 y 7). No me quedo clara. Investigarlo.
+
+- otras
+
+** TODO añadir elementos animados
+
+Añadir algunos elementos animados en el tablero. El objetivo es doble:
+
+- desarrollar un módulo que simplifique la gestión de las animaciones.
+
+- añadir más carga al juego.
+
+Ideas:
+
+- obstáculos fijos con varios sprites que se pintan en bucle.
+
+- elementos decorativos: un ratoncillo que asoma la cabeza si la
+  serpiente está lejos y se esconde cuando se acerca.
+
+- obstáculos móbiles. Habrá que pensar el tema de las colisiones, por
+  ejemplo:
+
+  - el obstáculo se mueve entre dos puntos A y B, situados en la misma
+    horizontal o vertical.
+
+  - si durante el desplazamiento encuentra un obstáculo (la serpiente)
+    invierte el sentido. No mata a la serpiente (o la mata si choca
+    con la cabeza?).
+
+  - si la serpiente choca con el obstáculo muere.
+
+** TODO animación del movimiento a nivel de pixel/byte (?)
+
+La serpiente se desplaza 8 pixels en horizontal y 10 en vertical, no
+es un desplazamiento suave que digamos pero dada la velocidad a la que
+va el juego no parece un gran problema. En la intro se nota mas pero
+se puede /arreglar/ acelerando la animación (al principio, con la
+novedad, estaba bién pero ahora se me hace larga).
+
+De todas formas estaria bién probar una animación más suave:
+
+- animar solo la cabeza y la cola. Dos fotogramas para la animación.
+  En el primero se pinta el sprite desplazado media casilla i en el
+  segundo entera.
+
+- animar toda la serpiente. No tengo claro que animar el cuerpo aporte
+  nada dado su coste, pero se puede intentar.
+
+
+* Hecho
